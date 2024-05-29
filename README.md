@@ -155,11 +155,63 @@ Add the field that you want to add like `type`, important note, very important n
 python3 manage.py makemigrations
 ```
 
-## applying new migration
+### applying new migration
 
 You then apply these new instructions to your toy box (database) to update the existing toy cars with the new `type` feature.
 
 ```
 # updating database with latest features
 python manage.py migrate
+```
+
+### testing / adding note to our database
+
+Now let's add a single note to our database to make sure our code so far works smoothly. We first create a note, save it and then call for all notes in database.
+
+```
+python3 manage.py shell
+>>> from api.models import Note
+>>> note1 = note(title="First note", body="Congratulations! U made ur 1st note")
+>>> note1.save()
+>>> note.objects.all()
+<QuerySet [<note: First Note>]>
+>>> exit()
+```
+
+
+## API-fication
+
+### Endpoints
+
+Endpoints are like "stations" where kids can perform certain actions, like viewing the toys, adding new toys, updating toys, or removing toys. These endpoints define where the resources can be accessed or manipulated using standard HTTP methods :
+
+    - **View All notes** : `GET /api/notes/`
+
+    - **View a specific note** : `GET /api/notes/<id>/`
+
+    - **Add a new note** : `POST /api/notes/<id>/`
+
+    - **Update a note** : `PUT /api/notes/<id>/`
+
+    - **Remove a note** : `DELETE /api/notes/<id>/`
+
+One of the basics of `RESTful APIs` is the idea of `resources`. The term is rather abstract, but in this context it refers to a class that sits between our URLs and our models.
+
+A user will make a request to an endpoint. Depending on the URL, the user will be redirected to a particular resource, which will then perform the appropriate `CRUD`(creating, reading, updating, deleting) action on the model/database.
+
+
+### creating resources
+
+We import our model, create a resource from it. **Resource Definition** : You define a resource called NoteResource that corresponds to the `note` model.
+**QuerySet** : specifies the set of Note objects that this resource will operate on, instances of the note model `note.objects.all()`.
+**Resource Name** : The resource is named `note1`, which determines the endpoint URL for this resource.
+
+```
+from api.models import note
+from tastypie.resources import ModelResource
+
+class noteResource(ModelResource):
+    class meta:
+        queryset = note.objects.all()
+        resource_name = 'note1'
 ```
