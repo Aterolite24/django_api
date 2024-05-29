@@ -202,9 +202,11 @@ A user will make a request to an endpoint. Depending on the URL, the user will b
 
 ### creating resources
 
-We import our model, create a resource from it. **Resource Definition** : You define a resource called NoteResource that corresponds to the `note` model.
-**QuerySet** : specifies the set of Note objects that this resource will operate on, instances of the note model `note.objects.all()`.
-**Resource Name** : The resource is named `note1`, which determines the endpoint URL for this resource.
+When we create a resource in Tastypie, it's like labeling specific toys (data models) in the toy box so that children (users) can find and play with them. We import our model, create a resource from it. 
+
+- **Resource Definition** : You define a resource called NoteResource that corresponds to the `note` model.
+- **QuerySet** : specifies the set of Note objects that this resource will operate on, instances of the note model `note.objects.all()`.
+- **Resource Name** : The resource is named `note1`, which determines the endpoint URL for this resource.
 
 ```
 from api.models import note
@@ -214,4 +216,31 @@ class noteResource(ModelResource):
     class meta:
         queryset = note.objects.all()
         resource_name = 'note1'
+```
+
+### redirecting to resources
+
+Just like listing toys in the toy box menu, we need to configure URLs so that children (users) can find and access the toys using the labels. So we go to notable_django/urls.py :
+
+```
+from django.contrib import admin
+from django.urls import re_path, include
+from api.resources import noteResource
+
+note_resource = noteResource()
+
+urlpatterns = [
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^api/', include(note_resource.urls))
+]
+```
+
+
+### testing our API
+
+We’re going to use [Postman](https://www.postman.com/) to make API requests. It is a popular API development tool that allows developers to create, test, and manage API requests.
+
+```
+# to runserver
+python3 manage.py runserver
 ```
