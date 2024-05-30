@@ -1,12 +1,22 @@
 # Django_api_using_TastyPie
 
-we are going to use TastyPie library to set up a simple API using Django.
+We are going to use TastyPie library to set up a simple API using Django.
 
-we will be building an API for a Google note-taking web app. We want to build a REST-ful API with CRUD endpoints, to createm read, update, and delete notes.
+We will be building an API for a Google note-taking web app. We want to build a REST-ful API with CRUD endpoints, to createm read, update, and delete notes.
+
+### Features
+
+- Create, read, update, and delete notes
+- API endpoints for managing notes
+- Basic authentication and authorization
 
 
 ## Setup 
 
+### Cloning the repository
+```
+   git clone https://github.com/Aterolite24/django_api.git
+```
 
 ### Install Django
 
@@ -250,4 +260,76 @@ python3 manage.py runserver
 ```
 
 You will get the following output on Postman :
+
 ![Postman Output1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_result.png)
+
+Nicee! our GET endpoint works smoothly. Let's move ahead.
+
+
+### POST, PUT, DELETE
+
+Select POST option in Postman. Write a raw JSON object as our new note. Make sure you select JSON in orange dropdown there! This will set a Content-Type header (which you can view under the Headers tab).
+
+> Make sure you send the request to http://localhost:8000/api/note/, not http://localhost:8000/api/note. 
+
+That trailing slash is important, since otherwise Django has to redirect you, losing the POST data. By default, Django includes middleware called `CommonMiddleware` that can append a trailing slash to URLs when they are not found. However, if we send that request, it fails, we get Error 401 (Unauthorised).
+
+[Postman Error 1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_error1.png)
+
+TastyPie is protective of its models out of the box, and only allows reading, not modifying, the data. It’s an easy fix, though — import their basic `Authorization` class from `tastypie.authorization`, and add it to our resource.
+
+go to api/resources and make following changes :
+```
+from api.models import Note
+from tastypie.resources import ModelResource
+from tastypie.authorization import Authorization
+
+class NoteResource(ModelResource):
+    class Meta:
+        queryset = Note.objects.all()
+        resource_name = 'note'
+        authorization = Authorization()
+```
+
+Try again now, we get back 201, aka Success! You can check that both these notes are there by sending a get request to http://127.0.0.1:8000/api/note/ . Now it must return both notes.
+
+>Important warning: the Authorization class with TastyPie is great for development — but not suitable for actual deployment.
+
+Authorization is very permissive and does not enforce any specific access control rules beyond basic authentication.
+
+
+### All the endpoints
+
+We just finished with GET and POST endpoints. TastyPie does the remaining endpoints by itself. You may try `PUT` or `DELETE` to update or delete a note at http://127.0.0.1:8000/api/note/<index>/ . 
+
+Great! We have greated a working RESTful API.
+
+
+### Limiting Fields
+
+We have currently three fields, 'title', 'body' and 'created_at'. But, later on suppose you want only 2 fields say 'title' and 'body', you can limit fields like so:
+
+```
+from tastypie.resources import ModelResource
+from api.models import Note
+from tastypie.authorization import Authorization
+class NoteResource(ModelResource):
+    class Meta:
+        queryset = Note.objects.all()
+        resource_name = 'note'
+        authorization = Authorization()
+        fields = ['title', 'body']
+```
+
+Now you won’t see our created_at field in any requests.
+
+
+### Thanks
+
+If you find this project useful, please consider:
+
+- **Starring** the project on GitHub to show your support
+- **Sharing** it with others who might benefit from it
+- **Contributing** to the project by submitting issues or pull requests
+
+Your support is greatly appreciated!
