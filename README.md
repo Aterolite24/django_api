@@ -1,4 +1,4 @@
-# django_api
+# Django_api_using_TastyPie
 
 we are going to use TastyPie library to set up a simple API using Django.
 
