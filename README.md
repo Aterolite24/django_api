@@ -274,7 +274,7 @@ Select POST option in Postman. Write a raw JSON object as our new note. Make sur
 
 That trailing slash is important, since otherwise Django has to redirect you, losing the POST data. By default, Django includes middleware called `CommonMiddleware` that can append a trailing slash to URLs when they are not found. However, if we send that request, it fails, we get Error 401 (Unauthorised).
 
-[Postman Error 1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_error1.png)
+![Postman Error 1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_error1.png)
 
 TastyPie is protective of its models out of the box, and only allows reading, not modifying, the data. It’s an easy fix, though — import their basic `Authorization` class from `tastypie.authorization`, and add it to our resource.
 
