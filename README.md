@@ -248,3 +248,6 @@ We’re going to use [Postman](https://www.postman.com/) to make API requests. I
 # to runserver
 python3 manage.py runserver
 ```
+
+You will get the following output on Postman :
+[Postman Output1]()
