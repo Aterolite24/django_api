@@ -250,4 +250,4 @@ python3 manage.py runserver
 ```
 
 You will get the following output on Postman :
-[Postman Output1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_result.png)
+![Postman Output1](https://github.com/Aterolite24/django_api/blob/main/assets/images/postman_result.png)
