@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import re_path, include
-from api.resources import noteResource
+from api.resources import NoteResource
 
-note_resource = noteResource()
+note_resource = NoteResource()
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
-    re_path(r'^api/', include(note_resource.urls)),
+    re_path(r'^api/', include(note_resource.urls))
 ]

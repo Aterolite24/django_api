@@ -79,10 +79,12 @@ Each model is a python class that subclasses `django.db.models.Model` . Each att
 
 Going with our analogy, let's create a model for a toy car:
 
+> Remember ! In Python, class names typically use CamelCase.
+
 ```
 from django.db import models
 
-class toycar(models.Model):
+class ToyCar(models.Model):
     color = models.CharField(max_length = 20)
     wheels = models.IntegerField()
     size = models.CharField(max_length=10)
@@ -94,7 +96,7 @@ Now we go to api/models.py and create our model :
 ```
 from django.db import models
 
-class note(models.Model):
+class Note(models.Model):
     title = models.CharField(max_length = 200)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add = True)
@@ -123,7 +125,7 @@ Similarly we do it for our Note app, we will return `title` by `__str__` method 
 ```
 from django.db import models
 
-class note(models.Model):
+class Note(models.Model):
     title = models.CharField(max_length = 200)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add = True)
@@ -171,9 +173,9 @@ Now let's add a single note to our database to make sure our code so far works s
 ```
 python3 manage.py shell
 >>> from api.models import Note
->>> note1 = note(title="First note", body="Congratulations! U made ur 1st note")
->>> note1.save()
->>> note.objects.all()
+>>> note = Note(title="First note", body="Congratulations! U made ur 1st note")
+>>> note.save()
+>>> Note.objects.all()
 <QuerySet [<note: First Note>]>
 >>> exit()
 ```
@@ -208,14 +210,16 @@ When we create a resource in Tastypie, it's like labeling specific toys (data mo
 - **QuerySet** : specifies the set of Note objects that this resource will operate on, instances of the note model `note.objects.all()`.
 - **Resource Name** : The resource is named `note1`, which determines the endpoint URL for this resource.
 
+> Remember ! The Meta class inside noteResource should start with an uppercase 'M'
+
 ```
-from api.models import note
+from api.models import Note
 from tastypie.resources import ModelResource
 
-class noteResource(ModelResource):
-    class meta:
+class NoteResource(ModelResource):
+    class Meta:
         queryset = note.objects.all()
-        resource_name = 'note1'
+        resource_name = 'note'
 ```
 
 ### redirecting to resources
@@ -225,9 +229,9 @@ Just like listing toys in the toy box menu, we need to configure URLs so that ch
 ```
 from django.contrib import admin
 from django.urls import re_path, include
-from api.resources import noteResource
+from api.resources import NoteResource
 
-note_resource = noteResource()
+note_resource = NoteResource()
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
